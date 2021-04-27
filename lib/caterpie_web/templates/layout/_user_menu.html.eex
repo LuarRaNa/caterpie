@@ -1,10 +1,10 @@
-<ul>
+<ul class="list-reset lg:flex justify-end flex-1 items-center">
 <%= if @current_user do %>
-  <li><%= @current_user.email %></li>
-  <li><%= link "Settings", to: Routes.user_settings_path(@conn, :edit) %></li>
-  <li><%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete %></li>
+  <li> <div class="ctrp_nav_link"><%= @current_user.email %></div></li>
+  <li><%= link "Settings", to: Routes.user_settings_path(@conn, :edit), class: "ctrp_nav_link" %></li>
+  <li><%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete, class: "ctrp_nav_link" %></li>
 <% else %>
-  <li><%= link "Register", to: Routes.user_registration_path(@conn, :new) %></li>
-  <li><%= link "Log in", to: Routes.user_session_path(@conn, :new) %></li>
+  <li><%= link "Register", to: Routes.user_registration_path(@conn, :new), class: "ctrp_nav_link" %></li>
+  <li><%= link "Log in", to: Routes.user_session_path(@conn, :new), class: "ctrp_nav_link" %></li>
 <% end %>
 </ul>
