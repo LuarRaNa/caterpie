@@ -23,7 +23,7 @@
 
         <div class="mb-4">
           <%= label f, :remember_me, "Keep me logged in for 60 days", class: "text-grey-darker text-sm font-bold mb-2" %>
-          <%= checkbox f, :remember_me, class: "" %>
+          <%= checkbox f, :remember_me, class: "text-pink-600" %>
         </div>
 
         <div class="flex items-center justify-between">
