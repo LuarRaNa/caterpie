@@ -68,6 +68,17 @@ defmodule CaterpieWeb.Router do
   end
 
   scope "/", CaterpieWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live "/quizzes", QuizLive.Index, :index
+    live "/quizzes/new", QuizLive.Index, :new
+    live "/quizzes/:id/edit", QuizLive.Index, :edit
+
+    live "/quizzes/:id", QuizLive.Show, :show
+    live "/quizzes/:id/show/edit", QuizLive.Show, :edit
+  end
+
+  scope "/", CaterpieWeb do
     pipe_through [:browser]
 
     delete "/users/log_out", UserSessionController, :delete
