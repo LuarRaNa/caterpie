@@ -1,0 +1,37 @@
+<h1>Listing Quizzes</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, CaterpieWeb.QuizLive.FormComponent,
+    id: @quiz.id || :new,
+    title: @page_title,
+    action: @live_action,
+    quiz: @quiz,
+    return_to: Routes.quiz_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="quizzes">
+    <%= for quiz <- @quizzes do %>
+      <tr id="quiz-<%= quiz.id %>">
+        <td><%= quiz.name %></td>
+        <td><%= quiz.description %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.quiz_show_path(@socket, :show, quiz) %></span>
+          <span><%= live_patch "Edit", to: Routes.quiz_index_path(@socket, :edit, quiz) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: quiz.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Quiz", to: Routes.quiz_index_path(@socket, :new) %></span>
