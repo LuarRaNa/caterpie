@@ -1,37 +1,63 @@
-<h1>Listing Quizzes</h1>
-
-<%= if @live_action in [:new, :edit] do %>
-  <%= live_modal @socket, CaterpieWeb.QuizLive.FormComponent,
-    id: @quiz.id || :new,
-    title: @page_title,
-    action: @live_action,
-    quiz: @quiz,
-    return_to: Routes.quiz_index_path(@socket, :index) %>
-<% end %>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Description</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="quizzes">
-    <%= for quiz <- @quizzes do %>
-      <tr id="quiz-<%= quiz.id %>">
-        <td><%= quiz.name %></td>
-        <td><%= quiz.description %></td>
-
-        <td>
-          <span><%= live_redirect "Show", to: Routes.quiz_show_path(@socket, :show, quiz) %></span>
-          <span><%= live_patch "Edit", to: Routes.quiz_index_path(@socket, :edit, quiz) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: quiz.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
+<div class="flex h-full">
+  <div class="flex-none w-1/4">
+    <div class="flex flex-col text-center w-full my-4">
+      <h1 class="sm:text-3xl text-2xl font-medium title-font text-gray-900">
+        Listing Quizzes
+      </h1>
+      <span>
+        <%= live_patch "New Quiz",
+          to: Routes.quiz_index_path(@socket, :new),
+          class: "bg-yellow-500 hover:bg-yellow-600 text-white text-2xl font-bold py-2 px-4 rounded inline-block my-6" %>
+      </span>
+    </div>
+    <section class="text-gray-600 body-font">
+      <%= for quiz <- @quizzes do %>
+        <div class="p-4" id="quiz-<%= quiz.id %>">
+          <div class="flex rounded-lg h-full border-4 border-yellow-200 p-8 flex-col">
+            <div class="flex items-center mb-3">
+              <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-yellow-500 text-white flex-shrink-0">
+                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-5 h-5" viewBox="0 0 24 24">
+                  <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+              </div>
+              <h2 class="text-gray-900 text-lg title-font font-medium"><%= quiz.name %></h2>
+            </div>
+            <div class="flex-grow mb-3">
+              <p class="leading-relaxed text-base"><%= quiz.description %></p>
+            </div>
+            <div class="flex-grow">
+              <span>
+                <%= live_redirect "Show",
+                  to: Routes.quiz_show_path(@socket, :show, quiz),
+                  class: "bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" %>
+              </span>
+              <span>
+                <%= live_patch "Edit",
+                  to: Routes.quiz_index_path(@socket,:edit, quiz),
+                  class: "bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" %>
+              </span>
+              <span>
+                <%= link "Delete",
+                  to: "#",
+                  phx_click: "delete",
+                  phx_value_id: quiz.id,
+                  data: [confirm: "Are you sure?"],
+                  class: "bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" %>
+              </span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </section>
+  </div>
+  <div class="flex-grow">
+    <%= if @live_action in [:new, :edit] do %>
+      <%= live_modal @socket, CaterpieWeb.QuizLive.FormComponent,
+        id: @quiz.id || :new,
+        title: @page_title,
+        action: @live_action,
+        quiz: @quiz,
+        return_to: Routes.quiz_index_path(@socket, :index) %>
     <% end %>
-  </tbody>
-</table>
-
-<span><%= live_patch "New Quiz", to: Routes.quiz_index_path(@socket, :new) %></span>
+  </div>
+</div>
