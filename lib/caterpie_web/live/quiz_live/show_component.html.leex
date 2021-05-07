@@ -1,0 +1,17 @@
+<h1>Show Quiz</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @quiz.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @quiz.description %>
+  </li>
+
+</ul>
+
+<span><%= live_redirect "Back", to: Routes.quiz_index_path(@socket, :index) %></span>

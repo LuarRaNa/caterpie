@@ -32,6 +32,12 @@ defmodule CaterpieWeb.QuizLive.Index do
     |> assign(:quiz, nil)
   end
 
+  defp apply_action(socket, :show, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Show Quiz")
+    |> assign(:quiz, QMS.get_quiz!(id))
+  end
+
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     quiz = QMS.get_quiz!(id)

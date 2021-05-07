@@ -28,7 +28,7 @@
             <div class="flex-grow">
               <span>
                 <%= live_redirect "Show",
-                  to: Routes.quiz_show_path(@socket, :show, quiz),
+                  to: Routes.quiz_index_path(@socket, :show, quiz),
                   class: "bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" %>
               </span>
               <span>
@@ -54,6 +54,14 @@
     <%= if @live_action in [:new, :edit] do %>
       <%= live_modal @socket, CaterpieWeb.QuizLive.FormComponent,
         id: @quiz.id || :new,
+        title: @page_title,
+        action: @live_action,
+        quiz: @quiz,
+        return_to: Routes.quiz_index_path(@socket, :index) %>
+    <% end %>
+    <%= if @live_action in [:show] do %>
+      <%= live_modal @socket, CaterpieWeb.QuizLive.ShowComponent,
+        id: @quiz.id,
         title: @page_title,
         action: @live_action,
         quiz: @quiz,

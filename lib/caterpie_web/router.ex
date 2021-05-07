@@ -73,9 +73,7 @@ defmodule CaterpieWeb.Router do
     live "/quizzes", QuizLive.Index, :index
     live "/quizzes/new", QuizLive.Index, :new
     live "/quizzes/:id/edit", QuizLive.Index, :edit
-
-    live "/quizzes/:id", QuizLive.Show, :show
-    live "/quizzes/:id/show/edit", QuizLive.Show, :edit
+    live "/quizzes/:id", QuizLive.Index, :show
   end
 
   scope "/", CaterpieWeb do
