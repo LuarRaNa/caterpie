@@ -12,7 +12,9 @@ defmodule CaterpieWeb.ModalComponent do
       phx-page-loading>
 
       <div class="phx-modal-content">
-        <%= live_patch raw("&times;"), to: @return_to, class: "phx-modal-close" %>
+        <%= live_patch raw("&times;"),
+          to: @return_to,
+          class: "bg-red-500 text-white font-bold p-2 rounded-b-full" %>
         <%= live_component @socket, @component, @opts %>
       </div>
     </div>

@@ -50,22 +50,24 @@
       <% end %>
     </section>
   </div>
-  <div class="flex-grow">
-    <%= if @live_action in [:new, :edit] do %>
-      <%= live_modal @socket, CaterpieWeb.QuizLive.FormComponent,
-        id: @quiz.id || :new,
-        title: @page_title,
-        action: @live_action,
-        quiz: @quiz,
-        return_to: Routes.quiz_index_path(@socket, :index) %>
-    <% end %>
-    <%= if @live_action in [:show] do %>
-      <%= live_modal @socket, CaterpieWeb.QuizLive.ShowComponent,
-        id: @quiz.id,
-        title: @page_title,
-        action: @live_action,
-        quiz: @quiz,
-        return_to: Routes.quiz_index_path(@socket, :index) %>
-    <% end %>
+  <div class="flex-grow border-l-8 border-yellow-300 bg-yellow-200">
+    <section class="body-font p-6">
+      <%= if @live_action in [:new, :edit] do %>
+        <%= live_modal @socket, CaterpieWeb.QuizLive.FormComponent,
+          id: @quiz.id || :new,
+          title: @page_title,
+          action: @live_action,
+          quiz: @quiz,
+          return_to: Routes.quiz_index_path(@socket, :index) %>
+      <% end %>
+      <%= if @live_action in [:show] do %>
+        <%= live_modal @socket, CaterpieWeb.QuizLive.ShowComponent,
+          id: @quiz.id,
+          title: @page_title,
+          action: @live_action,
+          quiz: @quiz,
+          return_to: Routes.quiz_index_path(@socket, :index) %>
+      <% end %>
+    </section>
   </div>
 </div>
