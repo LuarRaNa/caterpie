@@ -63,4 +63,67 @@ defmodule Caterpie.QMSTest do
       assert %Ecto.Changeset{} = QMS.change_quiz(quiz)
     end
   end
+
+  describe "questions_info" do
+    alias Caterpie.QMS.QuestionInfo
+
+    @valid_attrs %{response_time: 42, type: 42, value: 42}
+    @update_attrs %{response_time: 43, type: 43, value: 43}
+    @invalid_attrs %{response_time: nil, type: nil, value: nil}
+
+    def question_info_fixture(attrs \\ %{}) do
+      {:ok, question_info} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> QMS.create_question_info()
+
+      question_info
+    end
+
+    test "list_questions_info/0 returns all questions_info" do
+      question_info = question_info_fixture()
+      assert QMS.list_questions_info() == [question_info]
+    end
+
+    test "get_question_info!/1 returns the question_info with given id" do
+      question_info = question_info_fixture()
+      assert QMS.get_question_info!(question_info.id) == question_info
+    end
+
+    test "create_question_info/1 with valid data creates a question_info" do
+      assert {:ok, %QuestionInfo{} = question_info} = QMS.create_question_info(@valid_attrs)
+      assert question_info.response_time == 42
+      assert question_info.type == 42
+      assert question_info.value == 42
+    end
+
+    test "create_question_info/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = QMS.create_question_info(@invalid_attrs)
+    end
+
+    test "update_question_info/2 with valid data updates the question_info" do
+      question_info = question_info_fixture()
+      assert {:ok, %QuestionInfo{} = question_info} = QMS.update_question_info(question_info, @update_attrs)
+      assert question_info.response_time == 43
+      assert question_info.type == 43
+      assert question_info.value == 43
+    end
+
+    test "update_question_info/2 with invalid data returns error changeset" do
+      question_info = question_info_fixture()
+      assert {:error, %Ecto.Changeset{}} = QMS.update_question_info(question_info, @invalid_attrs)
+      assert question_info == QMS.get_question_info!(question_info.id)
+    end
+
+    test "delete_question_info/1 deletes the question_info" do
+      question_info = question_info_fixture()
+      assert {:ok, %QuestionInfo{}} = QMS.delete_question_info(question_info)
+      assert_raise Ecto.NoResultsError, fn -> QMS.get_question_info!(question_info.id) end
+    end
+
+    test "change_question_info/1 returns a question_info changeset" do
+      question_info = question_info_fixture()
+      assert %Ecto.Changeset{} = QMS.change_question_info(question_info)
+    end
+  end
 end
