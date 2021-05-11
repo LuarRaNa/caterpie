@@ -2,13 +2,15 @@ defmodule Caterpie.QMS.QuestionInfo do
   use Ecto.Schema
   import Ecto.Changeset
 
+  alias Caterpie.QMS.Quiz
+
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "questions_info" do
     field :response_time, :integer
     field :type, :integer
     field :value, :integer
-    field :quiz_id, :binary_id
+    belongs_to :quiz, Quiz
 
     timestamps()
   end

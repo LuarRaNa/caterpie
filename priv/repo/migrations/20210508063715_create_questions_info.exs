@@ -7,7 +7,7 @@ defmodule Caterpie.Repo.Migrations.CreateQuestionsInfo do
       add :type, :integer
       add :value, :integer
       add :response_time, :integer
-      add :quiz_id, references(:quizzes, on_delete: :nothing, type: :binary_id)
+      add :quiz_id, references(:quizzes, on_delete: :nothing, type: :binary_id), null: false
 
       timestamps()
     end

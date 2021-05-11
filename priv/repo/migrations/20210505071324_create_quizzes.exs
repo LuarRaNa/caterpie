@@ -6,7 +6,7 @@ defmodule Caterpie.Repo.Migrations.CreateQuizzes do
       add :id, :binary_id, primary_key: true
       add :name, :string
       add :description, :text
-      add :user_id, references(:users, on_delete: :nothing, type: :binary_id)
+      add :user_id, references(:users, on_delete: :nothing, type: :binary_id), null: false
 
       timestamps()
     end
