@@ -3,6 +3,7 @@ defmodule Caterpie.QMS.QuestionInfo do
   import Ecto.Changeset
 
   alias Caterpie.QMS.Quiz
+  alias Caterpie.QMS.Question
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -11,6 +12,7 @@ defmodule Caterpie.QMS.QuestionInfo do
     field :type, :integer
     field :value, :integer
     belongs_to :quiz, Quiz
+    has_many :questions, Question
 
     timestamps()
   end

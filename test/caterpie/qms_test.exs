@@ -129,4 +129,65 @@ defmodule Caterpie.QMSTest do
       assert %Ecto.Changeset{} = QMS.change_question_info(question_info)
     end
   end
+
+  describe "questions" do
+    alias Caterpie.QMS.Question
+
+    @valid_attrs %{is_active: true, text: "some text"}
+    @update_attrs %{is_active: false, text: "some updated text"}
+    @invalid_attrs %{is_active: nil, text: nil}
+
+    def question_fixture(attrs \\ %{}) do
+      {:ok, question} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> QMS.create_question()
+
+      question
+    end
+
+    test "list_questions/0 returns all questions" do
+      question = question_fixture()
+      assert QMS.list_questions() == [question]
+    end
+
+    test "get_question!/1 returns the question with given id" do
+      question = question_fixture()
+      assert QMS.get_question!(question.id) == question
+    end
+
+    test "create_question/1 with valid data creates a question" do
+      assert {:ok, %Question{} = question} = QMS.create_question(@valid_attrs)
+      assert question.is_active == true
+      assert question.text == "some text"
+    end
+
+    test "create_question/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = QMS.create_question(@invalid_attrs)
+    end
+
+    test "update_question/2 with valid data updates the question" do
+      question = question_fixture()
+      assert {:ok, %Question{} = question} = QMS.update_question(question, @update_attrs)
+      assert question.is_active == false
+      assert question.text == "some updated text"
+    end
+
+    test "update_question/2 with invalid data returns error changeset" do
+      question = question_fixture()
+      assert {:error, %Ecto.Changeset{}} = QMS.update_question(question, @invalid_attrs)
+      assert question == QMS.get_question!(question.id)
+    end
+
+    test "delete_question/1 deletes the question" do
+      question = question_fixture()
+      assert {:ok, %Question{}} = QMS.delete_question(question)
+      assert_raise Ecto.NoResultsError, fn -> QMS.get_question!(question.id) end
+    end
+
+    test "change_question/1 returns a question changeset" do
+      question = question_fixture()
+      assert %Ecto.Changeset{} = QMS.change_question(question)
+    end
+  end
 end
