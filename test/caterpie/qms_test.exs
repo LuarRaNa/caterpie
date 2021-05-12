@@ -103,7 +103,10 @@ defmodule Caterpie.QMSTest do
 
     test "update_question_info/2 with valid data updates the question_info" do
       question_info = question_info_fixture()
-      assert {:ok, %QuestionInfo{} = question_info} = QMS.update_question_info(question_info, @update_attrs)
+
+      assert {:ok, %QuestionInfo{} = question_info} =
+               QMS.update_question_info(question_info, @update_attrs)
+
       assert question_info.response_time == 43
       assert question_info.type == 43
       assert question_info.value == 43

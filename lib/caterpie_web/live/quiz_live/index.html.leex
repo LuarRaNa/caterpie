@@ -58,6 +58,7 @@
           title: @page_title,
           action: @live_action,
           quiz: @quiz,
+          current_user: @current_user,
           return_to: Routes.quiz_index_path(@socket, :index) %>
       <% end %>
       <%= if @live_action in [:show] do %>
@@ -66,6 +67,7 @@
           title: @page_title,
           action: @live_action,
           quiz: @quiz,
+          current_user: @current_user,
           return_to: Routes.quiz_index_path(@socket, :index) %>
       <% end %>
     </section>

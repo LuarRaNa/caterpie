@@ -5,8 +5,9 @@ defmodule CaterpieWeb.QuizLive.Index do
   alias Caterpie.QMS.Quiz
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :quizzes, list_quizzes())}
+  def mount(_params, session, socket) do
+    socket = assign_defaults(socket, session)
+    {:ok, assign(socket, :quizzes, QMS.list_quizzes(socket.assigns.current_user))}
   end
 
   @impl true
@@ -17,7 +18,7 @@ defmodule CaterpieWeb.QuizLive.Index do
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
     |> assign(:page_title, "Edit Quiz")
-    |> assign(:quiz, QMS.get_quiz!(id))
+    |> assign(:quiz, QMS.get_quiz!(socket.assigns.current_user, id))
   end
 
   defp apply_action(socket, :new, _params) do
@@ -35,18 +36,14 @@ defmodule CaterpieWeb.QuizLive.Index do
   defp apply_action(socket, :show, %{"id" => id}) do
     socket
     |> assign(:page_title, "Show Quiz")
-    |> assign(:quiz, QMS.get_quiz!(id))
+    |> assign(:quiz, QMS.get_quiz!(socket.assigns.current_user, id))
   end
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    quiz = QMS.get_quiz!(id)
+    quiz = QMS.get_quiz!(socket.assigns.current_user, id)
     {:ok, _} = QMS.delete_quiz(quiz)
 
-    {:noreply, assign(socket, :quizzes, list_quizzes())}
-  end
-
-  defp list_quizzes do
-    QMS.list_quizzes()
+    {:noreply, assign(socket, :quizzes, QMS.list_quizzes(socket.assigns.current_user))}
   end
 end

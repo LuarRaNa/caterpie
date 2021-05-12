@@ -28,7 +28,7 @@ defmodule CaterpieWeb.QuizLive.FormComponent do
   end
 
   defp save_quiz(socket, :edit, quiz_params) do
-    case QMS.update_quiz(socket.assigns.quiz, quiz_params) do
+    case QMS.update_quiz(socket.assigns.quiz, socket.assigns.current_user, quiz_params) do
       {:ok, _quiz} ->
         {:noreply,
          socket
@@ -41,7 +41,7 @@ defmodule CaterpieWeb.QuizLive.FormComponent do
   end
 
   defp save_quiz(socket, :new, quiz_params) do
-    case QMS.create_quiz(quiz_params) do
+    case QMS.create_quiz(socket.assigns.current_user, quiz_params) do
       {:ok, _quiz} ->
         {:noreply,
          socket

@@ -7,6 +7,8 @@ defmodule Caterpie.QMS do
   alias Caterpie.Repo
 
   alias Caterpie.QMS.Quiz
+  alias Caterpie.QMS.QuestionInfo
+  alias Caterpie.Accounts.User
 
   @doc """
   Returns the list of quizzes.
@@ -17,8 +19,10 @@ defmodule Caterpie.QMS do
       [%Quiz{}, ...]
 
   """
-  def list_quizzes do
-    Repo.all(Quiz)
+  def list_quizzes(current_user = %User{}) do
+    current_user
+    |> Ecto.assoc(:quizzes)
+    |> Repo.all()
   end
 
   @doc """
@@ -35,7 +39,11 @@ defmodule Caterpie.QMS do
       ** (Ecto.NoResultsError)
 
   """
-  def get_quiz!(id), do: Repo.get!(Quiz, id)
+  def get_quiz!(current_user = %User{}, id) do
+    current_user
+    |> Ecto.assoc(:quizzes)
+    |> Repo.get!(id)
+  end
 
   @doc """
   Creates a quiz.
@@ -49,8 +57,9 @@ defmodule Caterpie.QMS do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_quiz(attrs \\ %{}) do
-    %Quiz{}
+  def create_quiz(current_user = %User{}, attrs \\ %{}) do
+    current_user
+    |> Ecto.build_assoc(:quizzes)
     |> Quiz.changeset(attrs)
     |> Repo.insert()
   end
@@ -67,9 +76,11 @@ defmodule Caterpie.QMS do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_quiz(%Quiz{} = quiz, attrs) do
-    quiz
+  def update_quiz(%Quiz{} = quiz, current_user = %User{}, attrs) do
+    get_quiz!(current_user, quiz.id)
+    |> IO.inspect()
     |> Quiz.changeset(attrs)
+    |> IO.inspect()
     |> Repo.update()
   end
 
@@ -101,8 +112,6 @@ defmodule Caterpie.QMS do
   def change_quiz(%Quiz{} = quiz, attrs \\ %{}) do
     Quiz.changeset(quiz, attrs)
   end
-
-  alias Caterpie.QMS.QuestionInfo
 
   @doc """
   Returns the list of questions_info.
