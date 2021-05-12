@@ -20,4 +20,18 @@ defmodule CaterpieWeb.LiveHelpers do
     modal_opts = [id: :modal, return_to: path, component: component, opts: opts]
     live_component(socket, CaterpieWeb.ModalComponent, modal_opts)
   end
+
+  def assign_defaults(socket, %{"user_token" => user_token} = _session) do
+    socket =
+      socket
+      |> Phoenix.LiveView.assign_new(:current_user, fn ->
+        Caterpie.Accounts.get_user_by_session_token(user_token)
+      end)
+
+    if socket.assigns.current_user do
+      socket
+    else
+      Phoenix.LiveView.redirect(socket, to: "/login")
+    end
+  end
 end
