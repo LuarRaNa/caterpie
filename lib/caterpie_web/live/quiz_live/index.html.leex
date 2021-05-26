@@ -44,6 +44,11 @@
                   data: [confirm: "Are you sure?"],
                   class: "bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" %>
               </span>
+              <span>
+                <%= live_patch "Questions",
+                  to: Routes.quiz_index_path(@socket,:index_question, quiz),
+                  class: "bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" %>
+              </span>
             </div>
           </div>
         </div>
@@ -69,6 +74,25 @@
           quiz: @quiz,
           current_user: @current_user,
           return_to: Routes.quiz_index_path(@socket, :index) %>
+      <% end %>
+      <%= if @live_action in [:index_question] do %>
+        <%= live_modal @socket, CaterpieWeb.QuestionLive.IndexComponent,
+          id: @quiz.id,
+          title: @page_title,
+          action: @live_action,
+          quiz: @quiz,
+          current_user: @current_user,
+          return_to: Routes.quiz_index_path(@socket, :index) %>
+      <% end %>
+      <%= if @live_action in [:new_question, :edit_question] do %>
+        <%= live_modal @socket, CaterpieWeb.QuestionLive.FormComponent,
+          id: @quiz.id,
+          title: @page_title,
+          action: @live_action,
+          quiz: @quiz,
+          question_info: @question_info,
+          current_user: @current_user,
+          return_to: Routes.quiz_index_path(@socket, :index_question, @quiz) %>
       <% end %>
     </section>
   </div>

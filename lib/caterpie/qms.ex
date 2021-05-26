@@ -123,8 +123,11 @@ defmodule Caterpie.QMS do
       [%QuestionInfo{}, ...]
 
   """
-  def list_questions_info do
-    Repo.all(QuestionInfo)
+  def list_questions_info(%Quiz{} = quiz) do
+    quiz
+    |> Ecto.assoc(:questions_info)
+    |> Repo.all()
+    |> Repo.preload(questions: from(q in Question, where: q.is_active == true))
   end
 
   @doc """
@@ -141,7 +144,12 @@ defmodule Caterpie.QMS do
       ** (Ecto.NoResultsError)
 
   """
-  def get_question_info!(id), do: Repo.get!(QuestionInfo, id)
+  def get_question_info!(quiz = %Quiz{}, id) do
+    quiz
+    |> Ecto.assoc(:questions_info)
+    |> Repo.get!(id)
+    |> Repo.preload(questions: from(q in Question, where: q.is_active == true))
+  end
 
   @doc """
   Creates a question_info.
@@ -155,8 +163,9 @@ defmodule Caterpie.QMS do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_question_info(attrs \\ %{}) do
-    %QuestionInfo{}
+  def create_question_info(%Quiz{} = quiz, attrs \\ %{}) do
+    quiz
+    |> Ecto.build_assoc(:questions_info)
     |> QuestionInfo.changeset(attrs)
     |> Repo.insert()
   end
@@ -174,8 +183,17 @@ defmodule Caterpie.QMS do
 
   """
   def update_question_info(%QuestionInfo{} = question_info, attrs) do
+    update =
+      update_in(attrs["questions"]["0"], fn map ->
+        map
+        |> Map.put("text", List.first(question_info.questions).text)
+        |> Map.put("is_active", "false")
+      end)
+
+    update = put_in(update["questions"]["1"], %{"text" => attrs["questions"]["0"]["text"]})
+
     question_info
-    |> QuestionInfo.changeset(attrs)
+    |> QuestionInfo.changeset(update)
     |> Repo.update()
   end
 
@@ -205,7 +223,8 @@ defmodule Caterpie.QMS do
 
   """
   def change_question_info(%QuestionInfo{} = question_info, attrs \\ %{}) do
-    QuestionInfo.changeset(question_info, attrs)
+    question_info
+    |> QuestionInfo.changeset(attrs)
   end
 
   @doc """

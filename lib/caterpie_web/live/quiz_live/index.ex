@@ -3,6 +3,8 @@ defmodule CaterpieWeb.QuizLive.Index do
 
   alias Caterpie.QMS
   alias Caterpie.QMS.Quiz
+  alias Caterpie.QMS.QuestionInfo
+  alias Caterpie.QMS.Question
 
   @impl true
   def mount(_params, session, socket) do
@@ -37,6 +39,31 @@ defmodule CaterpieWeb.QuizLive.Index do
     socket
     |> assign(:page_title, "Show Quiz")
     |> assign(:quiz, QMS.get_quiz!(socket.assigns.current_user, id))
+  end
+
+  defp apply_action(socket, :index_question, %{"id" => id}) do
+    quiz = QMS.get_quiz!(socket.assigns.current_user, id)
+
+    socket
+    |> assign(:page_title, "Listing Questions")
+    |> assign(:questions, QMS.list_questions_info(quiz))
+    |> assign(:quiz, quiz)
+  end
+
+  defp apply_action(socket, :new_question, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "New Question")
+    |> assign(:question_info, %QuestionInfo{questions: [%Question{}]})
+    |> assign(:quiz, QMS.get_quiz!(socket.assigns.current_user, id))
+  end
+
+  defp apply_action(socket, :edit_question, %{"id" => id, "id_q" => id_q}) do
+    quiz = QMS.get_quiz!(socket.assigns.current_user, id)
+
+    socket
+    |> assign(:page_title, "Edit Question")
+    |> assign(:quiz, quiz)
+    |> assign(:question_info, QMS.get_question_info!(quiz, id_q))
   end
 
   @impl true
