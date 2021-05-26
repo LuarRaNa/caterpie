@@ -7,7 +7,7 @@ defmodule Caterpie.QMS.Question do
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
   schema "questions" do
-    field :is_active, :boolean, default: false
+    field :is_active, :boolean, default: true
     field :text, :string
     belongs_to :question_info, QuestionInfo
 
@@ -18,6 +18,6 @@ defmodule Caterpie.QMS.Question do
   def changeset(question, attrs) do
     question
     |> cast(attrs, [:text, :is_active])
-    |> validate_required([:text, :is_active])
+    |> validate_required([:text])
   end
 end

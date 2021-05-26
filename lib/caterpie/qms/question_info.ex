@@ -22,5 +22,6 @@ defmodule Caterpie.QMS.QuestionInfo do
     question_info
     |> cast(attrs, [:type, :value, :response_time])
     |> validate_required([:type, :value, :response_time])
+    |> cast_assoc(:questions, required: true)
   end
 end
