@@ -1,0 +1,64 @@
+<section class="text-gray-600 body-font">
+  <div class="container px-5 py-5 mx-auto">
+    <div class="py-4i font-medium py-4 text-2xl title-font">
+      <h2><%= @title %></h2>
+    </div>
+    <div class="">
+      <%= f = form_for @changeset, "#",
+        id: "question-form",
+        phx_target: @myself,
+        phx_change: "validate",
+        phx_submit: "save" %>
+
+        <%= inputs_for f, :questions, fn q -> %>
+          <%= label q, :text, "Question", class: "block text-grey-darker text-sm font-bold mb-2" %>
+          <%= text_input q, :text, class: "shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" %>
+          <%= error_tag q, :text %>
+        <% end %>
+
+        <%= label f, :value, class: "block text-grey-darker text-sm font-bold mb-2" %>
+        <%= text_input f, :value, class: "shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" %>
+        <%= error_tag f, :value %>
+
+        <%= label f, :response_time, class: "block text-grey-darker text-sm font-bold mb-2" %>
+        <%= text_input f, :response_time, class: "shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" %>
+        <%= error_tag f, :response_time %>
+
+        <%= label f, :type, class: "block text-grey-darker text-sm font-bold mb-2" %>
+        <%= select f, :type, 0..2, class: "shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" %>
+        <%= error_tag f, :type %>
+
+        <p class="mt-4 mb-2 font-bold">Options</p>
+
+        <%= inputs_for f, :options, fn o -> %>
+        <div class="flex flex-wrap -mx-1 overflow-hidden">
+          <div class="form-group px-1 w-3/6">
+          <%= label o, :text, "Option", class: "block text-grey-darker text-sm font-bold mb-2" %>
+          <%= text_input o, :text, class: "shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" %>
+          <%= error_tag o, :text %>
+          </div>
+
+          <div class="form-group px-1 w-2/6">
+          <%= label o, :is_correct, "Is correct?", class: "block text-grey-darker text-sm font-bold mb-2" %>
+          <%= checkbox o, :is_correct, class: "shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" %>
+          <%= error_tag o, :is_correct %>
+          </div>
+
+          <div class="form-group px-1 w-1/6">
+          <%= label o, :text, "Delete", class: "block text-grey-darker text-sm font-bold mb-2" %>
+          <%= if is_nil(o.data.temp_id) do %>
+            <%= checkbox o, :delete, class: "shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" %>
+          <% else %>
+            <%= hidden_input o, :temp_id %>
+            <a href="#" phx-click="remove-option" phx-target="<%= @myself %>" phx-value-remove="<%= o.data.temp_id %>">&times</a>
+          <% end %>
+          </div>
+        </div>
+        <% end %>
+        <a href="#" phx-click="add-option" phx-target="<%= @myself %>">Add option</a>
+
+        <%= submit "Save", phx_disable_with: "Saving...", class: "bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded" %>
+      </form>
+    </div>
+  </div>
+</section>
