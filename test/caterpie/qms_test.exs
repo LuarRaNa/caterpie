@@ -190,4 +190,65 @@ defmodule Caterpie.QMSTest do
       assert %Ecto.Changeset{} = QMS.change_question(question)
     end
   end
+
+  describe "options" do
+    alias Caterpie.QMS.Option
+
+    @valid_attrs %{is_correct: true, text: "some text"}
+    @update_attrs %{is_correct: false, text: "some updated text"}
+    @invalid_attrs %{is_correct: nil, text: nil}
+
+    def option_fixture(attrs \\ %{}) do
+      {:ok, option} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> QMS.create_option()
+
+      option
+    end
+
+    test "list_options/0 returns all options" do
+      option = option_fixture()
+      assert QMS.list_options() == [option]
+    end
+
+    test "get_option!/1 returns the option with given id" do
+      option = option_fixture()
+      assert QMS.get_option!(option.id) == option
+    end
+
+    test "create_option/1 with valid data creates a option" do
+      assert {:ok, %Option{} = option} = QMS.create_option(@valid_attrs)
+      assert option.is_correct == true
+      assert option.text == "some text"
+    end
+
+    test "create_option/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = QMS.create_option(@invalid_attrs)
+    end
+
+    test "update_option/2 with valid data updates the option" do
+      option = option_fixture()
+      assert {:ok, %Option{} = option} = QMS.update_option(option, @update_attrs)
+      assert option.is_correct == false
+      assert option.text == "some updated text"
+    end
+
+    test "update_option/2 with invalid data returns error changeset" do
+      option = option_fixture()
+      assert {:error, %Ecto.Changeset{}} = QMS.update_option(option, @invalid_attrs)
+      assert option == QMS.get_option!(option.id)
+    end
+
+    test "delete_option/1 deletes the option" do
+      option = option_fixture()
+      assert {:ok, %Option{}} = QMS.delete_option(option)
+      assert_raise Ecto.NoResultsError, fn -> QMS.get_option!(option.id) end
+    end
+
+    test "change_option/1 returns a option changeset" do
+      option = option_fixture()
+      assert %Ecto.Changeset{} = QMS.change_option(option)
+    end
+  end
 end

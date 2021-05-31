@@ -4,6 +4,7 @@ defmodule Caterpie.QMS.QuestionInfo do
 
   alias Caterpie.QMS.Quiz
   alias Caterpie.QMS.Question
+  alias Caterpie.QMS.Option
 
   @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
@@ -13,6 +14,7 @@ defmodule Caterpie.QMS.QuestionInfo do
     field :value, :integer
     belongs_to :quiz, Quiz
     has_many :questions, Question
+    has_many :options, Option
 
     timestamps()
   end
@@ -23,5 +25,6 @@ defmodule Caterpie.QMS.QuestionInfo do
     |> cast(attrs, [:type, :value, :response_time])
     |> validate_required([:type, :value, :response_time])
     |> cast_assoc(:questions, required: true)
+    |> cast_assoc(:options, required: true)
   end
 end

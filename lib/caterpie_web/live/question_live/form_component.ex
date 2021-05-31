@@ -27,6 +27,41 @@ defmodule CaterpieWeb.QuestionLive.FormComponent do
     save_question_info(socket, socket.assigns.action, question_info_params)
   end
 
+  def handle_event("add-option", _, socket) do
+    existing_options =
+      Map.get(
+        socket.assigns.changeset.changes,
+        :options,
+        socket.assigns.question_info.options
+      )
+
+    options =
+      existing_options
+      |> Enum.concat([
+        QMS.change_option(%QMS.Option{temp_id: get_temp_id()})
+      ])
+
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_assoc(:options, options)
+
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+
+  def handle_event("remove-option", %{"remove" => remove_id}, socket) do
+    options =
+      socket.assigns.changeset.changes.options
+      |> Enum.reject(fn %{data: option} ->
+        option.temp_id == remove_id
+      end)
+
+    changeset =
+      socket.assigns.changeset
+      |> Ecto.Changeset.put_assoc(:options, options)
+
+    {:noreply, assign(socket, changeset: changeset)}
+  end
+
   defp save_question_info(socket, :edit_question, question_info_params) do
     case QMS.update_question_info(socket.assigns.question_info, question_info_params) do
       {:ok, _question_info} ->
@@ -52,4 +87,7 @@ defmodule CaterpieWeb.QuestionLive.FormComponent do
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
+
+  # JUST TO GENERATE A RANDOM STRING
+  defp get_temp_id, do: :crypto.strong_rand_bytes(5) |> Base.url_encode64() |> binary_part(0, 5)
 end
